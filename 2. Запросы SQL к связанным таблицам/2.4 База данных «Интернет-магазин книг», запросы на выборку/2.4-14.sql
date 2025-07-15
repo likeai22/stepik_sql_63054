@@ -1,17 +1,17 @@
-"""
-Query result:
-+----------------+--------+-----------+---------+--------------+--------+--------+
-| buy_archive_id | buy_id | client_id | book_id | date_payment | price  | amount |
-+----------------+--------+-----------+---------+--------------+--------+--------+
-| 1              | 2      | 1         | 1       | 2019-02-21   | 670.60 | 2      |
-| 2              | 2      | 1         | 3       | 2019-02-21   | 450.90 | 1      |
-| 3              | 1      | 2         | 2       | 2019-02-10   | 520.30 | 2      |
-| 4              | 1      | 2         | 4       | 2019-02-10   | 780.90 | 3      |
-| 5              | 1      | 2         | 3       | 2019-02-10   | 450.90 | 1      |
-| 6              | 3      | 4         | 4       | 2019-03-05   | 780.90 | 4      |
-| 7              | 3      | 4         | 5       | 2019-03-05   | 480.90 | 2      |
-| 8              | 4      | 1         | 6       | 2019-03-12   | 650.00 | 1      |
-| 9              | 5      | 2         | 1       | 2019-03-18   | 670.60 | 2      |
-| 10             | 5      | 2         | 4       | 2019-03-18   | 780.90 | 1      |
-+----------------+--------+-----------+---------+--------------+--------+--------+
-"""
+SELECT YEAR(date_payment) Год, MONTHNAME(date_payment) Месяц, SUM(price * amount) Сумма
+FROM 
+    buy_archive
+GROUP BY 1, 2
+
+UNION
+
+SELECT YEAR(date_step_end) Год, MONTHNAME(date_step_end) Месяц, SUM(price * bb.amount) Сумма
+FROM 
+    book 
+    INNER JOIN buy_book bb USING(book_id)
+    INNER JOIN buy USING(buy_id) 
+    INNER JOIN buy_step USING(buy_id)
+    INNER JOIN step USING(step_id)                  
+WHERE  date_step_end AND name_step = "Оплата"  
+GROUP BY 1, 2
+ORDER BY 2, 1

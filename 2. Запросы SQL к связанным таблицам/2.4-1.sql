@@ -7,7 +7,8 @@ client,
 buy,
 step,
 buy_book,
-buy_step;
+buy_step,
+buy_archive;
 
 CREATE TABLE author (
     author_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -81,9 +82,9 @@ VALUES ('Роман'),
 
 INSERT INTO book (title, author_id, genre_id, price, amount)
 VALUES ('Мастер и Маргарита', 1, 1, 670.99, 3),
-    ('Белая гвардия ', 1, 1, 540.50, 5),
+    ('Белая гвардия', 1, 1, 540.50, 5),
     ('Идиот', 2, 1, 460.00, 10),
-    ('Братья Карамазовы', 2, 1, 799.01, 2),
+    ('Братья Карамазовы', 2, 1, 799.01, 3),
     ('Игрок', 2, 1, 480.50, 10),
     ('Стихотворения и поэмы', 3, 2, 650.00, 15),
     ('Черный человек', 3, 2, 570.20, 6),
@@ -156,6 +157,31 @@ ALTER TABLE buy_step
     ADD FOREIGN KEY (buy_id)  REFERENCES buy(buy_id) ON DELETE CASCADE,
     ADD FOREIGN KEY (step_id) REFERENCES step(step_id) ON DELETE CASCADE;
 
+
+CREATE TABLE buy_archive (
+    buy_archive_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    buy_id INT,
+    client_id INT,
+    book_id INT,
+    date_payment DATE,
+    price DECIMAL(8,2),
+    amount INT,
+    FOREIGN KEY (client_id) REFERENCES client(client_id),
+    FOREIGN KEY (book_id) REFERENCES book(book_id)
+);
+
+INSERT INTO buy_archive (buy_id, client_id, book_id, date_payment, price, amount)
+VALUES
+    (2, 1, 1, '2019-02-21', 670.60, 2),
+    (2, 1, 3, '2019-02-21', 450.90, 1),
+    (1, 2, 2, '2019-02-10', 520.30, 2),
+    (1, 2, 4, '2019-02-10', 780.90, 3),
+    (1, 2, 3, '2019-02-10', 450.90, 1),
+    (3, 4, 4, '2019-03-05', 780.90, 4),
+    (3, 4, 5, '2019-03-05', 480.90, 2),
+    (4, 1, 6, '2019-03-12', 650.00, 1),
+    (5, 2, 1, '2019-03-18', 670.60, 2),
+    (5, 2, 4, '2019-03-18', 780.90, 1);
 
 -- Можно посмотреть какие строки получаются при создании таблицы: 
 -- SHOW COLUMNS FROM book;
