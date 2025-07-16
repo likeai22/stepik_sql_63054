@@ -1,8 +1,8 @@
-SELECT s.name_student, MAX(result)
+SELECT s.name_student, MAX(result) result
 FROM student s
-JOIN attempt a ON a.student_id=s.student_id
+JOIN attempt USING(student_id)
 GROUP BY 1
-HAVING MAX(result) = (
+HAVING result = (
     SELECT MAX(total)
     FROM (
         SELECT MAX(result) AS total
@@ -13,60 +13,37 @@ HAVING MAX(result) = (
 )
 ORDER BY 1;
 
-
-
-" прошлые задания
-SELECT name_genre, SUM(bb.amount) AS Количество
-FROM genre
-    JOIN book USING(genre_id) 
-    JOIN buy_book bb USING(book_id)
-GROUP BY name_genre
-HAVING SUM(bb.amount) = (
-    SELECT MAX(total)
-    FROM (
-        SELECT SUM(bb.amount) AS total
-        FROM buy_book bb
-        JOIN book USING(book_id)
-        GROUP BY genre_id
-    ) AS subquery
-);
-
-
-SELECT name_genre, Количество
+SELECT name_student, result
 FROM (
     SELECT 
-        name_genre, 
-        SUM(bb.amount) AS Количество,
-        RANK() OVER (ORDER BY SUM(bb.amount) DESC) AS `rank`
-    FROM genre
-    JOIN book USING(genre_id) 
-    JOIN buy_book bb USING(book_id)
-    GROUP BY name_genre
+        s.name_student, MAX(result) result,
+        RANK() OVER (ORDER BY MAX(result) DESC) AS `rank`
+    FROM student s
+    JOIN attempt USING(student_id)
+    GROUP BY student_id
 ) AS ranked
 WHERE `rank` = 1;
 
--- с сайта
--- С точки зрения оптимизации запроса, решение через WITH будет оптимальней, чем через вложенный запрос. Просто и компактно решается через обобщеное табличное представление
-WITH qq AS (SELECT name_genre, sum(bb.amount) AS Количество
-                FROM genre g
-                         JOIN book b
-                         USING (genre_id)
-                         JOIN buy_book bb
-                         USING (book_id)
-               GROUP BY name_genre)
-SELECT name_genre, Количество
-  FROM qq
-HAVING количество = (SELECT max(Количество) FROM qq);
+WITH qq AS (
+    SELECT name_student, MAX(result) result
+    FROM student s
+        JOIN attempt USING(student_id)
+    GROUP BY student_id
+)
+SELECT name_student, result
+FROM qq
+HAVING result = (
+        SELECT max(result)
+        FROM qq
+    )
+ORDER BY 1;
 
--- ALL
-SELECT name_genre, SUM(bb.amount) AS Количество 
-FROM book 
-    JOIN genre USING (genre_id)
-    JOIN buy_book bb USING (book_id)
-GROUP BY name_genre
-HAVING Количество >= ALL 
-    (SELECT SUM(bb.amount) AS sum_amount
-     FROM book JOIN buy_book bb USING (book_id)
-     GROUP BY genre_id);
-
-"
+SELECT name_student, MAX(result) result
+FROM student 
+    JOIN attempt USING(student_id)
+GROUP BY student_id
+HAVING result >= ALL 
+    (SELECT  MAX(result) result
+     FROM student JOIN attempt USING (student_id)
+     GROUP BY name_student)
+ORDER BY 1;
