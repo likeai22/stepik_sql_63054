@@ -6,8 +6,8 @@ question,
 answer,
 testing;
 
-CREATE DATABASE stepik_testing_63054;
-USE stepik_testing_63054;
+-- CREATE DATABASE stepik_testing_63054;
+-- USE stepik_testing_63054;
 
 CREATE TABLE subject (
     subject_id INT PRIMARY KEY AUTO_INCREMENT,
