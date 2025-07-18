@@ -4,16 +4,15 @@
 
 SELECT author,
     title,
-    price
+    price,
+    amount,
+    ROUND(100 * price*amount / (SELECT SUM(price*amount) FROM book), 2) income_percent
 FROM book
-WHERE price < any (
-        select min(price)
-        from book
-        GROUP BY author
-    );
+ORDER BY income_percent DESC;
 
-select author, title, min(price)
-        from book
-        GROUP BY author;
+
+-- select author, title, min(price)
+--         from book
+--         GROUP BY author;
 
 -- решения с сайта

@@ -1,14 +1,18 @@
-DROP TABLE IF EXISTS
-genre,
-author,
-city,
-book,
-client,
-buy,
-step,
-buy_book,
-buy_step,
-buy_archive;
+DROP DATABASE IF EXISTS stepik_bookshop_63054;
+CREATE DATABASE stepik_bookshop_63054;
+USE stepik_bookshop_63054;
+
+-- DROP TABLE IF EXISTS
+-- genre,
+-- author,
+-- city,
+-- book,
+-- client,
+-- buy,
+-- step,
+-- buy_book,
+-- buy_step,
+-- buy_archive;
 
 CREATE TABLE author (
     author_id INT PRIMARY KEY AUTO_INCREMENT,
