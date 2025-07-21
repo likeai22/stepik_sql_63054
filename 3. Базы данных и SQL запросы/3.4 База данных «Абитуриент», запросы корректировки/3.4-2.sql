@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS applicant;
 CREATE TABLE applicant AS
 SELECT program_id, enrollee_id, SUM(result) itog
 FROM program
