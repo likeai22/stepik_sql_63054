@@ -23,5 +23,6 @@ ADD FOREIGN KEY (genre_id) REFERENCES genre(genre_id);
 
 -- Можно посмотреть какие строки получаются при создании таблицы: 
 SHOW COLUMNS FROM book;
+DESCRIBE book;
+
 SHOW TABLES;
-SELECT * FROM buy_archive;

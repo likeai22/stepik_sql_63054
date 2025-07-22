@@ -187,6 +187,9 @@ VALUES
     (5, 2, 1, '2019-03-18', 670.60, 2),
     (5, 2, 4, '2019-03-18', 780.90, 1);
 
--- Можно посмотреть какие строки получаются при создании таблицы: 
--- SHOW COLUMNS FROM book;
--- SHOW TABLES;
+"
+SHOW COLUMNS FROM book;
+DESCRIBE table_name;
+
+SHOW TABLES;
+"
